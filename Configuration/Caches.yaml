@@ -1,0 +1,3 @@
+t3n_GraphQL_Schema:
+  frontend: Neos\Cache\Frontend\VariableFrontend
+  backend: Neos\Cache\Backend\FileBackend

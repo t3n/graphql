@@ -1,0 +1,24 @@
+{
+    "description": "Neos Flow adapter for graphql",
+    "type": "neos-package",
+    "name": "t3n/graphql",
+    "repositories": [
+        {"type": "git", "url": "https://github.com/t3n/graphql-tools"}
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "neos/flow": "*",
+        "t3n/graphql-tools": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "t3n\\GraphQL\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "t3n.GraphQL"
+        }
+    }
+}

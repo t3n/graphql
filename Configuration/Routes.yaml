@@ -1,0 +1,10 @@
+-
+  name: 'graphql - endpoint'
+  uriPattern: '<endpoint>'
+  defaults:
+    '@package':    't3n.GraphQL'
+    '@controller': 'GraphQL'
+    '@action':     'query'
+    '@format':     'json'
+    'endpoint':    '<endpoint>'
+  httpMethods: [POST]
