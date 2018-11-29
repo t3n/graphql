@@ -41,6 +41,10 @@ class Resolvers implements ArrayAccess, IteratorAggregate
         return new static();
     }
 
+    /**
+     * @Flow\CompileStatic
+     * @return mixed[]
+     */
     public static function aggregateTypes(ObjectManagerInterface $objectManager) : array
     {
         $reflectionService = $objectManager->get(ReflectionService::class);
