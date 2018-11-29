@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 namespace t3n\GraphQL\Service;
-use GraphQL\Language\AST\DocumentNode;
+
 use GraphQL\Language\Parser;
 use GraphQL\Type\Schema;
-use GraphQL\Utils\SchemaPrinter;
 use GraphQLTools\Generate\ConcatenateTypeDefs;
 use GraphQLTools\GraphQLTools;
 use InvalidArgumentException;
@@ -93,6 +92,9 @@ class SchemaService
 
         if (substr($configuration['typeDefs'], 0, 11) === 'resource://') {
             $options['typeDefs'] = Files::getFileContents($configuration['typeDefs']);
+            if ($options['typeDefs'] === false) {
+                throw new TypeError(sprintf('File "%s" does not exist', $configuration['typeDefs']));
+            }
         } else {
             $options['typeDefs'] = $configuration['typeDefs'];
         }
