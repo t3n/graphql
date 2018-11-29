@@ -8,6 +8,8 @@ use GraphQL\Language\Parser;
 use GraphQL\Type\Schema;
 use GraphQLTools\Generate\ConcatenateTypeDefs;
 use GraphQLTools\GraphQLTools;
+use GraphQLTools\SchemaDirectiveVisitor;
+use GraphQLTools\Transforms\Transform;
 use InvalidArgumentException;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
@@ -119,6 +121,15 @@ class SchemaService
             }
         }
 
+        if (isset($configuration['transforms']) && is_array($configuration['transforms'])) {
+            $options['transforms'] = array_map(
+                static function (string $transformClassName) : Transform {
+                    return new $transformClassName();
+                },
+                $configuration['transforms']
+            );
+        }
+
         return $options;
     }
 
@@ -126,10 +137,15 @@ class SchemaService
     {
         $executableSchemas = [];
 
+        $transforms = [];
+
         $options = [
             'typeDefs' => [],
             'resolvers' => [],
-            'schemaDirectives' => []
+            'schemaDirectives' => [],
+            'resolverValidationOptions' => [
+                'allowResolversNotInSchema' => true
+            ]
         ];
 
         foreach ($configuration['schemas'] as $schemaConfiguration) {
@@ -140,12 +156,19 @@ class SchemaService
                 $options['typeDefs'][] = $schemaInfo['typeDefs'];
                 $options['resolvers'] = array_merge_recursive($options['resolvers'], $schemaInfo['resolvers']->toArray());
                 $options['schemaDirectives'] = array_merge($options['schemaDirectives'], $schemaInfo['schemaDirectives'] ?? []);
+                $transforms = array_merge($transforms, $schemaInfo['transforms'] ?? []);
             }
         }
 
         if (isset($configuration['schemaDirectives'])) {
-            foreach ($configuration['schemaDirectives'] as $directiveName => $schemaDirectiveVisitor) {
-                $options['schemaDirectives'][$directiveName] = new $schemaDirectiveVisitor();
+            foreach ($configuration['schemaDirectives'] as $directiveName => $schemaDirectiveVisitorClassName) {
+                $schemaDirectiveVisitor = new $schemaDirectiveVisitorClassName();
+
+                if (! $schemaDirectiveVisitor instanceof SchemaDirectiveVisitor) {
+                    throw new TypeError(sprintf('%s has to extend %s', $schemaDirectiveVisitorClassName, SchemaDirectiveVisitor::class));
+                }
+
+                $options['schemaDirectives'][$directiveName] = $schemaDirectiveVisitor;
             }
         }
 
@@ -161,20 +184,28 @@ class SchemaService
             $schema = GraphQLTools::makeExecutableSchema($options);
         }
 
-        if (count($executableSchemas) === 0) {
-            return $schema;
-        }
-
         if ($schema) {
             $executableSchemas[] = $schema;
         }
 
         if (count($executableSchemas) > 1) {
-            return GraphQLTools::mergeSchemas([
+            $schema = GraphQLTools::mergeSchemas([
                 'schemas' => $executableSchemas
             ]);
+        } else {
+            $schema = $executableSchemas[0];
         }
 
-        return $executableSchemas[0];
+        if (isset($configuration['transforms'])) {
+            foreach ($configuration['transforms'] as $transformClassName) {
+                $transforms[] = new $transformClassName();
+            }
+        }
+
+        if (count($transforms) > 0) {
+            $schema = GraphQLTools::transformSchema($schema, $transforms);
+        }
+
+        return $schema;
     }
 }

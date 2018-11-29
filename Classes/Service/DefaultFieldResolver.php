@@ -13,9 +13,10 @@ use function is_object;
 class DefaultFieldResolver
 {
     /**
-     * @param mixed   $source
-     * @param mixed[] $args
-     * @param mixed   $context
+     * @param mixed       $source
+     * @param mixed[]     $args
+     * @param mixed       $context
+     * @param ResolveInfo $info
      *
      * @return mixed|null
      */

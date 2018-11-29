@@ -11,7 +11,7 @@ Neos:
 t3n:
   GraphQL:
     context: 't3n\GraphQL\Context'
-    includeExceptionMessageInOutput: false
+    includeExceptionMessageInOutput: true
     endpoints: []
 #      'some-endpoint':
 #        'schemaEnvelope': 'Some\Fully\Qualified\Namespace'

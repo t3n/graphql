@@ -1,0 +1,3 @@
+t3n:
+  GraphQL:
+    includeExceptionMessageInOutput: false
