@@ -15,6 +15,7 @@ use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManagerInterface;
 use Neos\Utility\Files;
+use Neos\Utility\PositionalArraySorter;
 use t3n\GraphQL\Resolvers;
 use t3n\GraphQL\SchemaEnvelopeInterface;
 use TypeError;
@@ -135,6 +136,8 @@ class SchemaService
 
     protected function getMergedSchemaFromConfigurations(array $configuration) : Schema
     {
+        $schemaConfigurations = (new PositionalArraySorter($configuration['schemas']))->toArray();
+
         $executableSchemas = [];
 
         $transforms = [];
@@ -148,7 +151,7 @@ class SchemaService
             ]
         ];
 
-        foreach ($configuration['schemas'] as $schemaConfiguration) {
+        foreach ($schemaConfigurations as $schemaConfiguration) {
             if (isset($schemaConfiguration['schemaEnvelope'])) {
                 $executableSchemas[] = $this->getSchemaFromEnvelope($schemaConfiguration['schemaEnvelope']);
             } else {
@@ -197,7 +200,9 @@ class SchemaService
         }
 
         if (isset($configuration['transforms'])) {
-            foreach ($configuration['transforms'] as $transformClassName) {
+            $transformConfiguration = (new PositionalArraySorter($configuration['transforms']))->toArray();
+
+            foreach ($transformConfiguration as $transformClassName) {
                 $transforms[] = new $transformClassName();
             }
         }
