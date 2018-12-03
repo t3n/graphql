@@ -12,6 +12,7 @@ use t3n\GraphQL\Service\SchemaService;
 use function is_string;
 use function json_decode;
 use function json_encode;
+use t3n\GraphQL\Service\ValidationRuleService;
 
 class GraphQLController extends ActionController
 {
@@ -20,6 +21,12 @@ class GraphQLController extends ActionController
      * @var SchemaService
      */
     protected $schemaService;
+
+    /**
+     * @Flow\Inject
+     * @var ValidationRuleService
+     */
+    protected $validationRuleService;
 
     /**
      * @Flow\InjectConfiguration("context")
@@ -46,6 +53,7 @@ class GraphQLController extends ActionController
         }
 
         $schema = $this->schemaService->getSchemaForEndpoint($endpoint);
+        $validationRules = $this->validationRuleService->getValidationRulesForEndpoint($endpoint);
 
         $context = new $this->contextClassName($this->controllerContext);
         $result  = GraphQL::executeQuery(
@@ -55,7 +63,8 @@ class GraphQLController extends ActionController
             $context,
             $variables,
             $operationName,
-            [DefaultFieldResolver::class, 'resolve']
+            [DefaultFieldResolver::class, 'resolve'],
+            $validationRules
         );
 
         $this->response->setHeader('Content-Type', 'application/json');
