@@ -211,11 +211,5 @@ class SchemaService
         }
 
         return GraphQLTools::transformSchema($schema, $transforms);
-
-        if (count($transforms) > 0) {
-            $schema = GraphQLTools::transformSchema($schema, $transforms);
-        }
-
-        return $schema;
     }
 }
