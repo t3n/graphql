@@ -1,11 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace t3n\GraphQL\Transform;
 
 use GraphQL\Error\Error;
-use Neos\Flow\Annotations as Flow;
 use GraphQL\Executor\ExecutionResult;
 use GraphQLTools\Transforms\Transform;
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\ThrowableStorageInterface;
+use function array_map;
+use function preg_replace;
 
 class FlowErrorTransform implements Transform
 {
@@ -21,11 +26,7 @@ class FlowErrorTransform implements Transform
      */
     protected $includeExceptionMessageInOutput;
 
-    /**
-     * @param ExecutionResult $result
-     * @return ExecutionResult
-     */
-    public function transformResult(ExecutionResult $result): ExecutionResult
+    public function transformResult(ExecutionResult $result) : ExecutionResult
     {
         $result->errors = array_map(function (Error $error) {
             $previousError = $error->getPrevious();
