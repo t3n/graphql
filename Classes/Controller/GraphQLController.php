@@ -45,6 +45,7 @@ class GraphQLController extends ActionController
      * @param string $query
      * @param array|null $variables
      * @param string $operationName
+     * @Flow\SkipCsrfProtection
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null) : string
     {
