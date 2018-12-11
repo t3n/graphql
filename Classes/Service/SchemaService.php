@@ -18,6 +18,7 @@ use Neos\Utility\Files;
 use Neos\Utility\PositionalArraySorter;
 use t3n\GraphQL\Resolvers;
 use t3n\GraphQL\SchemaEnvelopeInterface;
+use t3n\GraphQL\Transform\FlowErrorTransform;
 use TypeError;
 use function is_array;
 use function md5;
@@ -140,7 +141,9 @@ class SchemaService
 
         $executableSchemas = [];
 
-        $transforms = [];
+        $transforms = [
+            new FlowErrorTransform()
+        ];
 
         $options = [
             'typeDefs' => [],
@@ -206,6 +209,8 @@ class SchemaService
                 $transforms[] = new $transformClassName();
             }
         }
+
+        return GraphQLTools::transformSchema($schema, $transforms);
 
         if (count($transforms) > 0) {
             $schema = GraphQLTools::transformSchema($schema, $transforms);

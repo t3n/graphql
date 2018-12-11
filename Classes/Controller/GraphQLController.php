@@ -35,12 +35,6 @@ class GraphQLController extends ActionController
     protected $contextClassName;
 
     /**
-     * @Flow\InjectConfiguration("includeExceptionMessageInOutput")
-     * @var bool
-     */
-    protected $includeExceptionMessageInOutput;
-
-    /**
      * @param string $endpoint
      * @param string $query
      * @param array|null $variables
@@ -69,6 +63,6 @@ class GraphQLController extends ActionController
         );
 
         $this->response->setHeader('Content-Type', 'application/json');
-        return json_encode($result->toArray($this->includeExceptionMessageInOutput));
+        return json_encode($result->toArray());
     }
 }
