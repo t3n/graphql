@@ -51,6 +51,9 @@ class GraphQLController extends ActionController
         $validationRules = $this->validationRuleService->getValidationRulesForEndpoint($endpoint);
 
         $context = new $this->contextClassName($this->controllerContext);
+
+        GraphQL::setDefaultFieldResolver([DefaultFieldResolver::class, 'resolve']);
+
         $result  = GraphQL::executeQuery(
             $schema,
             $query,
@@ -58,7 +61,7 @@ class GraphQLController extends ActionController
             $context,
             $variables,
             $operationName,
-            [DefaultFieldResolver::class, 'resolve'],
+            null,
             $validationRules
         );
 
