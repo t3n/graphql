@@ -61,7 +61,7 @@ class GraphQLController extends ActionController
             $context,
             $variables,
             $operationName,
-            [DefaultFieldResolver::class, 'resolve'],
+            null,
             $validationRules
         );
 
