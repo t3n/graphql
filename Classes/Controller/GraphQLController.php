@@ -59,7 +59,7 @@ class GraphQLController extends ActionController
         $schema = $this->schemaService->getSchemaForEndpoint($endpoint);
         $validationRules = $this->validationRuleService->getValidationRulesForEndpoint($endpoint);
 
-        if (array_key_exists('context', $this->endpointConfigurations[$endpoint]) && !empty($this->endpointConfigurations[$endpoint]['context'])) {
+        if (isset($this->endpointConfigurations[$endpoint]['context'])) {
             $contextClassname = $this->endpointConfigurations[$endpoint]['context'];
         } else {
             $contextClassname = $this->contextClassName;
