@@ -23,6 +23,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
 {
     /**
      * @Flow\Inject
+     *
      * @var ObjectManagerInterface
      */
     protected $objectManager;
@@ -36,16 +37,17 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     /** @var mixed[] */
     protected $resolvers = [];
 
-    public static function create() : self
+    public static function create(): self
     {
         return new static();
     }
 
     /**
      * @Flow\CompileStatic
+     *
      * @return mixed[]
      */
-    public static function aggregateTypes(ObjectManagerInterface $objectManager) : array
+    public static function aggregateTypes(ObjectManagerInterface $objectManager): array
     {
         $reflectionService = $objectManager->get(ReflectionService::class);
         $classNames        = $reflectionService->getAllImplementationClassNamesForInterface(ResolverInterface::class);
@@ -56,12 +58,12 @@ class Resolvers implements ArrayAccess, IteratorAggregate
 
             $fields = array_filter(
                 array_map(
-                    static function (ReflectionMethod $method) : string {
+                    static function (ReflectionMethod $method): string {
                         return $method->getName();
                     },
                     $classReflection->getMethods(ReflectionMethod::IS_PUBLIC)
                 ),
-                static function (string $methodName) : bool {
+                static function (string $methodName): bool {
                     return $methodName === '__schema' || substr($methodName, 0, 2) !== '__';
                 }
             );
@@ -79,7 +81,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     {
     }
 
-    protected function initialize() : void
+    protected function initialize(): void
     {
         if ($this->resolvers) {
             return;
@@ -119,13 +121,13 @@ class Resolvers implements ArrayAccess, IteratorAggregate
         }
     }
 
-    public function withPathPattern(string $pathPattern) : self
+    public function withPathPattern(string $pathPattern): self
     {
         $this->pathPattern = trim($pathPattern, '/');
         return $this;
     }
 
-    public function withType(string $typeName, string $className) : self
+    public function withType(string $typeName, string $className): self
     {
         $this->types[$typeName] = trim($className, '/');
         return $this;
@@ -134,7 +136,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     /**
      * @param mixed $offset
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         $this->initialize();
         return isset($this->resolvers);
@@ -142,6 +144,8 @@ class Resolvers implements ArrayAccess, IteratorAggregate
 
     /**
      * @param mixed $offset
+     *
+     * @return mixed|null
      */
     public function offsetGet($offset)
     {
@@ -153,7 +157,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value) : void
+    public function offsetSet($offset, $value): void
     {
         // not implemented on purpose
     }
@@ -161,18 +165,21 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         // not implemented on purpose
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         $this->initialize();
         return new ArrayIterator($this->resolvers);
     }
 
-    public function toArray()
+    /**
+     * @return mixed[]
+     */
+    public function toArray(): array
     {
         $this->initialize();
         return $this->resolvers;

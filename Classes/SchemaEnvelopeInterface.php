@@ -8,5 +8,5 @@ use GraphQL\Type\Schema;
 
 interface SchemaEnvelopeInterface
 {
-    public function getSchema() : Schema;
+    public function getSchema(): Schema;
 }

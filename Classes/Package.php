@@ -22,7 +22,10 @@ class Package extends BasePackage
 {
     protected const FILE_MONITOR_IDENTIFIER = 't3n_GraphQL_Files';
 
-    protected function monitorTypeDefResources(array $configuration, PackageManagerInterface $packageManager, FileMonitor $fileMonitor) : void
+    /**
+     * @param mixed[] $configuration
+     */
+    protected function monitorTypeDefResources(array $configuration, PackageManagerInterface $packageManager, FileMonitor $fileMonitor): void
     {
         $schemas = $configuration['schemas'] ?? null;
         if (is_array($schemas)) {
@@ -49,14 +52,14 @@ class Package extends BasePackage
         $fileMonitor->monitorFile($absolutePath);
     }
 
-    public function boot(Bootstrap $bootstrap) : void
+    public function boot(Bootstrap $bootstrap): void
     {
         if ($bootstrap->getContext()->isProduction()) {
             return;
         }
 
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $dispatcher->connect(Sequence::class, 'afterInvokeStep', function (Step $step) use ($bootstrap) : void {
+        $dispatcher->connect(Sequence::class, 'afterInvokeStep', function (Step $step) use ($bootstrap): void {
             if ($step->getIdentifier() !== 'neos.flow:systemfilemonitor') {
                 return;
             }
@@ -80,7 +83,7 @@ class Package extends BasePackage
         $dispatcher->connect(
             FileMonitor::class,
             'filesHaveChanged',
-            static function (string $fileMonitorIdentifier, array $changedFiles) use ($bootstrap) : void {
+            static function (string $fileMonitorIdentifier, array $changedFiles) use ($bootstrap): void {
                 if ($fileMonitorIdentifier !== static::FILE_MONITOR_IDENTIFIER || count($changedFiles) === 0) {
                     return;
                 }

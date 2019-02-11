@@ -16,17 +16,21 @@ class ValidationRuleService
 {
     /**
      * @Flow\InjectConfiguration("endpoints")
+     *
      * @var ValidationRule[]
      */
     protected $endpoints;
 
-    public function getValidationRulesForEndpoint(string $endpoint) : array
+    /**
+     * @return mixed[]
+     */
+    public function getValidationRulesForEndpoint(string $endpoint): array
     {
         $rawValidationRulesConfiguration = $this->endpoints[$endpoint]['validationRules'] ?? [];
         $validationRulesConfiguration = (new PositionalArraySorter($rawValidationRulesConfiguration))->toArray();
 
         $addedRules = array_map(
-            static function (array $validationRuleConfiguration) : ValidationRule {
+            static function (array $validationRuleConfiguration): ValidationRule {
                 $className = $validationRuleConfiguration['className'];
                 $arguments = $validationRuleConfiguration['arguments'] ?? [];
                 return new $className(...array_values($arguments));
