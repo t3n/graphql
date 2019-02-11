@@ -16,17 +16,19 @@ class FlowErrorTransform implements Transform
 {
     /**
      * @Flow\Inject
+     *
      * @var ThrowableStorageInterface
      */
     protected $throwableStorage;
 
     /**
      * @Flow\InjectConfiguration("includeExceptionMessageInOutput")
+     *
      * @var bool
      */
     protected $includeExceptionMessageInOutput;
 
-    public function transformResult(ExecutionResult $result) : ExecutionResult
+    public function transformResult(ExecutionResult $result): ExecutionResult
     {
         $result->errors = array_map(function (Error $error) {
             $previousError = $error->getPrevious();

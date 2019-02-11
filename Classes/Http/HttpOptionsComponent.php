@@ -15,11 +15,12 @@ class HttpOptionsComponent implements ComponentInterface
 {
     /**
      * @Flow\InjectConfiguration("endpoints")
+     *
      * @var mixed[]
      */
     protected $endpoints;
 
-    public function handle(ComponentContext $componentContext) : void
+    public function handle(ComponentContext $componentContext): void
     {
         /** @var ServerRequestInterface $httpRequest */
         $httpRequest = $componentContext->getHttpRequest();

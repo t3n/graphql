@@ -32,18 +32,21 @@ class SchemaService
 {
     /**
      * @Flow\InjectConfiguration("endpoints")
+     *
      * @var mixed[]
      */
     protected $endpoints;
 
     /**
      * @Flow\Inject
+     *
      * @var ObjectManagerInterface
      */
     protected $objectManager;
 
     /**
      * @Flow\Inject
+     *
      * @var VariableFrontend
      */
     protected $schemaCache;
@@ -53,7 +56,7 @@ class SchemaService
      */
     protected $firstLevelCache = [];
 
-    public function getSchemaForEndpoint(string $endpoint) : Schema
+    public function getSchemaForEndpoint(string $endpoint): Schema
     {
         if (isset($this->firstLevelCache[$endpoint])) {
             return $this->firstLevelCache[$endpoint];
@@ -75,7 +78,7 @@ class SchemaService
         return $schema;
     }
 
-    protected function getSchemaFromEnvelope(string $envelopeClassName) : Schema
+    protected function getSchemaFromEnvelope(string $envelopeClassName): Schema
     {
         $envelope = $this->objectManager->get($envelopeClassName);
         if (! $envelope instanceof SchemaEnvelopeInterface) {
@@ -86,13 +89,13 @@ class SchemaService
     }
 
     /**
-     * @param mixed[] $options
+     * @param mixed[] $configuration
+     *
+     * @return mixed[]
      */
-    protected function getSchemaFromConfiguration(array $configuration) : array
+    protected function getSchemaFromConfiguration(array $configuration): array
     {
-        $options = [
-            'typeDefs' => ''
-        ];
+        $options = ['typeDefs' => ''];
 
         if (substr($configuration['typeDefs'], 0, 11) === 'resource://') {
             $options['typeDefs'] = Files::getFileContents($configuration['typeDefs']);
@@ -125,7 +128,7 @@ class SchemaService
 
         if (isset($configuration['transforms']) && is_array($configuration['transforms'])) {
             $options['transforms'] = array_map(
-                static function (string $transformClassName) : Transform {
+                static function (string $transformClassName): Transform {
                     return new $transformClassName();
                 },
                 $configuration['transforms']
@@ -135,23 +138,24 @@ class SchemaService
         return $options;
     }
 
-    protected function getMergedSchemaFromConfigurations(array $configuration) : Schema
+    /**
+     * @param mixed[] $configuration
+     *
+     * @return mixed[]
+     */
+    protected function getMergedSchemaFromConfigurations(array $configuration): Schema
     {
         $schemaConfigurations = (new PositionalArraySorter($configuration['schemas']))->toArray();
 
         $executableSchemas = [];
 
-        $transforms = [
-            new FlowErrorTransform()
-        ];
+        $transforms = [new FlowErrorTransform()];
 
         $options = [
             'typeDefs' => [],
             'resolvers' => [],
             'schemaDirectives' => [],
-            'resolverValidationOptions' => [
-                'allowResolversNotInSchema' => true
-            ]
+            'resolverValidationOptions' => ['allowResolversNotInSchema' => true],
         ];
 
         foreach ($schemaConfigurations as $schemaConfiguration) {
@@ -195,9 +199,7 @@ class SchemaService
         }
 
         if (count($executableSchemas) > 1) {
-            $schema = GraphQLTools::mergeSchemas([
-                'schemas' => $executableSchemas
-            ]);
+            $schema = GraphQLTools::mergeSchemas(['schemas' => $executableSchemas]);
         } else {
             $schema = $executableSchemas[0];
         }
