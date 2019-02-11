@@ -5,6 +5,9 @@
     "repositories": [
         {"type": "git", "url": "https://github.com/t3n/graphql-tools"}
     ],
+    "config": {
+        "bin-dir": "bin"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
