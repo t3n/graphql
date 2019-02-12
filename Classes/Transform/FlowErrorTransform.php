@@ -9,8 +9,6 @@ use GraphQL\Executor\ExecutionResult;
 use GraphQLTools\Transforms\Transform;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\ThrowableStorageInterface;
-use function array_map;
-use function preg_replace;
 
 class FlowErrorTransform implements Transform
 {

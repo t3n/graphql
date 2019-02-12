@@ -7,8 +7,6 @@ namespace t3n\GraphQL\Service;
 use GraphQL\Executor\Executor;
 use GraphQL\Type\Definition\ResolveInfo;
 use Neos\Utility\ObjectAccess;
-use function is_callable;
-use function is_object;
 
 class DefaultFieldResolver
 {

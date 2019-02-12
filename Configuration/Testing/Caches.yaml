@@ -1,7 +1,7 @@
 t3n_GraphQL_Resolve:
   frontend: Neos\Cache\Frontend\VariableFrontend
-  backend: Neos\Cache\Backend\FileBackend
+  backend: Neos\Cache\Backend\TransientMemoryBackend
 
 t3n_GraphQL_Schema:
   frontend: Neos\Cache\Frontend\VariableFrontend
-  backend: Neos\Cache\Backend\FileBackend
+  backend: Neos\Cache\Backend\TransientMemoryBackend

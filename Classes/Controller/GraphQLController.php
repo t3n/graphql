@@ -8,6 +8,7 @@ use GraphQL\GraphQL;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use t3n\GraphQL\Context;
+use t3n\GraphQL\Exception\InvalidContextException;
 use t3n\GraphQL\Service\DefaultFieldResolver;
 use t3n\GraphQL\Service\SchemaService;
 use t3n\GraphQL\Service\ValidationRuleService;
@@ -45,10 +46,8 @@ class GraphQLController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      *
-     * @param string $endpoint
-     * @param string $query
      * @param mixed[]|null $variables
-     * @param string $operationName
+     * @param string|null $operationName
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null): string
     {
