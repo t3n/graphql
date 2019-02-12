@@ -12,12 +12,6 @@ use Neos\Flow\ObjectManagement\ObjectManagerInterface;
 use Neos\Flow\Reflection\ReflectionService;
 use ReflectionClass;
 use ReflectionMethod;
-use function array_filter;
-use function array_map;
-use function preg_replace;
-use function str_replace;
-use function substr;
-use function trim;
 
 class Resolvers implements ArrayAccess, IteratorAggregate
 {

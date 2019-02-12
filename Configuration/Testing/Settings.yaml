@@ -1,0 +1,6 @@
+Neos:
+  Flow:
+    mvc:
+      routes:
+        't3n.GraphQL':
+          position: 'start'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace t3n\GraphQL\Controller;
+namespace t3n\GraphQL\Exception;
 
 use Neos\Flow\Exception;
 

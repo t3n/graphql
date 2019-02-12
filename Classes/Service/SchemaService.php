@@ -20,10 +20,6 @@ use t3n\GraphQL\Resolvers;
 use t3n\GraphQL\SchemaEnvelopeInterface;
 use t3n\GraphQL\Transform\FlowErrorTransform;
 use TypeError;
-use function is_array;
-use function md5;
-use function sprintf;
-use function substr;
 
 /**
  * @Flow\Scope("singleton")

@@ -14,9 +14,6 @@ use Neos\Flow\Package\Package as BasePackage;
 use Neos\Flow\Package\PackageManagerInterface;
 use Neos\Utility\Files;
 use Neos\Utility\Unicode\Functions;
-use function count;
-use function is_array;
-use function substr;
 
 class Package extends BasePackage
 {
