@@ -46,6 +46,8 @@ class GraphQLController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      *
+     * @param string $endpoint
+     * @param string $query
      * @param mixed[]|null $variables
      * @param string|null $operationName
      */
