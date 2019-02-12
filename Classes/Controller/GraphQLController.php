@@ -44,11 +44,13 @@ class GraphQLController extends ActionController
     protected $endpointConfigurations;
 
     /**
+     * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
+     *
      * @Flow\SkipCsrfProtection
      *
      * @param string $endpoint
      * @param string $query
-     * @param mixed[]|null $variables
+     * @param array|null $variables
      * @param string|null $operationName
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null): string
