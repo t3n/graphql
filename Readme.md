@@ -10,7 +10,7 @@ Simply install the package via composer:
 composer require "t3n/graphql"
 ```
 
-Note: we currently need composer set to "minimum-stability": "dev" as we wait of a new release of [webonyx/graphql-php](https://github.com/webonyx/graphql-php)
+Note: we currently need composer set to `"minimum-stability": "dev"` as we wait for a new release of [webonyx/graphql-php](https://github.com/webonyx/graphql-php)
 to get a bugfix released.
 
 ## Configuration
