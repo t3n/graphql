@@ -10,6 +10,9 @@ Simply install the package via composer:
 composer require "t3n/graphql"
 ```
 
+Note: we currently need composer set to "minimum-stability": "dev" as we wait of a new release of [webonyx/graphql-php](https://github.com/webonyx/graphql-php)
+to get a bugfix released.
+
 ## Configuration
 In order to use your GraphQL API endpoint some configuration is necessary.
 
@@ -61,7 +64,7 @@ schema {
 }
 ```
 
-Under the hood we use [t3n/garphql-tools](https://github.com/t3n/graphql-tools). This package is a php port from 
+Under the hood we use [t3n/graphql-tools](https://github.com/t3n/graphql-tools). This package is a php port from 
 [Apollos graphql-tools](https://github.com/apollographql/graphql-tools/). This enables you to use some advanced 
 features like schema stitching. So it's possible to configure multiple schemas per endpoint. All schemas
 will be merged internally together to a single schema.
