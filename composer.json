@@ -8,8 +8,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "neos/flow": "~5.2.0",
-        "t3n/graphql-tools": "~1.0.1"
+        "neos/flow": "~4.3 || ~5.0",
+        "t3n/graphql-tools": "~1.0.1",
+        "php": ">=7.2"
     },
     "require-dev": {
         "t3n/coding-standard": "~1.0.0"
