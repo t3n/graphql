@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.com/t3n/graphql.svg?branch=master)](https://travis-ci.com/t3n/graphql)
 
 # t3n.GraphQL
-Flow Package to add graphql APIs to Neos and Flow that also supports advanced features like schema stitching, validation rules, schema directives and more.
-This package doesn't provide a GraphQL client to test you API. We suggest to use the [GraphlQL Playground](https://github.com/prisma/graphql-playground)
+Flow Package to add graphql APIs to [Neos and Flow](https://neos.io) that also supports advanced features like schema stitching, validation rules, schema directives and more.
+This package doesn't provide a GraphQL client to test your API. We suggest to use the [GraphlQL Playground](https://github.com/prisma/graphql-playground)
 
 Simply install the package via composer:
 
@@ -28,7 +28,7 @@ To make this possible, you first have to add the route to your `Routes.yaml`:
             'endpoint': 'my-endpoint'
 ```
 
-Don't forget to load the routes at all:
+Don't forget to load your routes at all:
 
 ```yaml
 Neos:
@@ -41,11 +41,11 @@ Neos:
 Now the route is activated and available.
 
 ### Schema
-The next step is to define a schema that can be queried via the API.
+The next step is to define a schema that can be queried.
 
-First off create a `schema.graphql` file:
+Create a `schema.graphql` file:
+
 /Your.Package/Resources/Private/GraphQL/schema.root.graphql
-
 ```graphql schema
 type Query {
     ping: String!
@@ -63,10 +63,10 @@ schema {
 
 Under the hood we use [t3n/garphql-tools](https://github.com/t3n/graphql-tools). This package is a php port from 
 [Apollos graphql-tools](https://github.com/apollographql/graphql-tools/). This enables you to use some advanced 
-features like schema stitching for a endpoint. So it's possible to configure multiple schemas per endpoint. All schemas
+features like schema stitching. So it's possible to configure multiple schemas per endpoint. All schemas
 will be merged internally together to a single schema.
 
-Add your schema like this:
+Add a schema to your endpoint like this:
 
 ```yaml
 t3n:
@@ -78,7 +78,7 @@ t3n:
             typeDefs: 'resource://Your.Package/Private/GraphQL/schema.root.graphql'
 ```
 
-To add another schema just add a new entry below the `schemas` index in your `Settings.yaml`
+To add another schema just add a new entry below the `schemas` index for your endpoint.
 
 You can also use the extend feature:
 
@@ -127,7 +127,7 @@ t3n:
             Product: 'Your\Package\GraphQL\Resolver\ProductResolver'
 ```
 
-Each resolver must implement `t3n\GraphQL\ResolverInterface`.
+Each resolver must implement `t3n\GraphQL\ResolverInterface` !
 
 You can also add resolvers dynamically so you don't have to configure each resolver separately:
 ```yaml
@@ -141,7 +141,7 @@ t3n:
             Query: 'Your\Package\GraphQL\Resolver\QueryResolver'
 ```
 With this configuration the class `Your\Package\GraphQL\Resolver\Type\ProductResolver` would be responsible
-for queries on a Product type.
+for queries on a Product type. The {Type} will evaluate to your type name.
 
 #### Resolver Implementation
 A implementation for our example could look like this (pseudocode):
@@ -200,11 +200,11 @@ query {
 ```
 
 would invoke the QueryResolver in first place and call the `products()` method. This method
-returns an array with Product Objects. For each of the Objects the ProductResolver is used.
+returns an array with Product objects. For each of the objects the ProductResolver is used.
 To fetch the actual value there is a DefaultFieldResolver. If you do not configure a method 
-named as the requests property it will kick in. The DefaultFieldResolver will try to fetch
-the data itself via `ObjectAccess::getProperty($source, $fieldName)`. 
-So if you Product Object has a `getName()` it will be used. You can still overload the
+named as the requests property it will be used to fetch the value. The DefaultFieldResolver
+will try to fetch the data itself via `ObjectAccess::getProperty($source, $fieldName)`. 
+So if your Product Object has a `getName()` it will be used. You can still overload the
 implementation just like in the example.
 
 All resolver methods share the same signature:
@@ -213,11 +213,11 @@ method($source, $args, $context, $info)
 ```
 
 ### Context
-The third argument in your Resolver is the Context. By Default it's set to `t3n\GraphQContext` wich
-exposes the current request.
+The third argument in your Resolver method signature is the Context.
+By Default it's set to `t3n\GraphQContext` which exposes the current request.
 
 It's easy to set your very own Context per endpoint. This might be handy to share some Code or Objects
-between all your Resolver implementations.
+between all your Resolver implementations. Make sure to extend `t3n\GraphQContext`
 
 Let's say we have an graphql endpoint for a shopping basket (simplified):
 ````graphql schema
@@ -339,7 +339,7 @@ class MutationResolver implements ResolverInterface
 
 ### Secure your endpoint
 To secure your api endpoints you have several options. The easiest way is to just configure
-some privliege for your Resolver:
+some privilege for your Resolver:
 
 ```yaml
 privilegeTargets:
@@ -366,7 +366,7 @@ By default this package provides three directives:
 - CachedDirective
 - CostDirective
 
-To enable those Directives add them to your graphql endpoint:
+To enable those Directives add this configuration to your endpoint:
 ```yaml
 t3n:
   GraphQL:
@@ -374,7 +374,7 @@ t3n:
       'your-endpoint':
         schemas:
           root: # use any key you like here
-            typeDefs: 'resource://t3n.GraphlQL/Private/GraphQL/schema.root.graphql'
+            typeDefs: 'resource://t3n.GraphQL/Private/GraphQL/schema.root.graphql'
         schemaDirectives:
           auth: 't3n\GraphQL\Directive\AuthDirective'
           cached: 't3n\GraphQL\Directive\CachedDirective'
@@ -383,20 +383,18 @@ t3n:
 
 #### AuthDirective
 The AuthDirective will check the security context for current authenticated roles.
-This enables you to protect objects or fields to user roles.
+This enables you to protect objects or fields to user with given roles.
 
-Use it like this to allow Editors to update a product but restrict the removal to 
-Admins:
+Use it like this to allow Editors to update a product but restrict the removal to Admins only:
 ```graphql schema
 type Mutation {
     updateProduct(): Product @auth(required: "Neos.Neos:Editor")
     removeProduct(): Boolean @auth(required: "Neos.Neos:Administrator")
 }
-
 ```
 
 #### CachedDirective
-Caching is always a thing. Somer queries might be expensive to resolve and it's worthy to cache the result.
+Caching is always a thing. Some queries might be expensive to resolve and it's worthy to cache the result.
 Therefore you should use the CachedDirective:
 
 ```graphql schema
@@ -410,9 +408,9 @@ argument as well as tags. Check the flow documentation about caching to learn ab
 The cache entry identifier will respect all arguments (id in this example) as well as the query path.
 
 #### CostDirective
-The CostDirective will add a complexity function to your fields and objects wich is used by some validation rules.
-Eacht type and children has a default complexity of 1.
-It allows you to annotate cost values and multiplierers just like this:
+The CostDirective will add a complexity function to your fields and objects which is used by some validation rules.
+Each type and children has a default complexity of 1.
+It allows you to annotate cost values and multipliers just like this:
 
 ````graphql schema
 type Product @cost(complexity: 5) {
@@ -433,7 +431,7 @@ cause we defined the limit value as an multiplier. So the query would have a tot
 There are several Validation rules you can enable per endpoint. The most common are the QueryDepth as well as the QueryComplexity
 rule. Configure your endpoint to enable those rules:
 
-````graphql schema
+````yaml
 t3n:
   GraphQL:
     endpoints:
