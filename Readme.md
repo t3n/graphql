@@ -4,7 +4,6 @@
 Flow Package to add graphql APIs to Neos and Flow that also supports advanced features like schema stitching, validation rules, schema directives and more.
 This package doesn't provide a GraphQL client to test you API. We suggest to use the [GraphlQL Playground](https://github.com/prisma/graphql-playground)
 
-## Setup
 Simply install the package via composer:
 
 ```bash
@@ -41,7 +40,7 @@ Neos:
 ```
 Now the route is activated and available.
 
-#### Schema
+### Schema
 The next step is to define a schema that can be queried via the API.
 
 First off create a `schema.graphql` file:
@@ -54,6 +53,11 @@ type Query {
 
 type Mutation {
     pong: String!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
 }
 ```
 
@@ -94,7 +98,7 @@ t3n:
             typeDefs: 'resource://Your.Package/Private/GraphQL/schema.yeah.graphql'
 ```
 
-#### Resolver
+### Resolver
 Now you need to add some Resolver. You can add a Resolver for each of your types.
 Given this schema:
 
@@ -109,7 +113,6 @@ type Product {
     name: String!
     price: Float!
 }
-
 ```
 
 You might want to configure Resolver for both types:
@@ -140,7 +143,7 @@ t3n:
 With this configuration the class `Your\Package\GraphQL\Resolver\Type\ProductResolver` would be responsible
 for queries on a Product type.
 
-##### Resolver Implementation
+#### Resolver Implementation
 A implementation for our example could look like this (pseudocode):
 
 ```php
@@ -167,9 +170,7 @@ class QueryResolver implements ResolverInterface
         return $this->someServiceToFetchProducts->getProductById($id);
     }
 }
-
 ```
-
 ```php
 <?php
 
@@ -187,7 +188,6 @@ class ProductResolver implements ResolverInterface
     }
 }
 ```
-
 An example query like:
 ```graphql
 query {
@@ -212,7 +212,7 @@ All resolver methods share the same signature:
 method($source, $args, $context, $info)
 ```
 
-#### Context
+### Context
 The third argument in your Resolver is the Context. By Default it's set to `t3n\GraphQContext` wich
 exposes the current request.
 
@@ -337,7 +337,7 @@ class MutationResolver implements ResolverInterface
 }
 ```
 
-#### Policy.yaml
+### Secure your endpoint
 To secure your api endpoints you have several options. The easiest way is to just configure
 some privliege for your Resolver:
 
@@ -358,8 +358,57 @@ roles:
       permission: GRANT
 ```
 
-#### schema directives
-- useage example
+You could also use a custom Context to access the current logged in user.
 
-#### validation rules
+### Schema directives
+By default this package provides three directives:
+- AuthDirective
+- CachedDirective
+- CostDirective
+
+To enable those Directives add them to your graphql endpoint:
+```yaml
+t3n:
+  GraphQL:
+    endpoints:
+      'your-endpoint':
+        schemas:
+          root: # use any key you like here
+            typeDefs: 'resource://t3n.GraphlQL/Private/GraphQL/schema.root.graphql'
+```
+
+#### AuthDirective
+The AuthDirective will check the security context for current authenticated roles.
+This enables you to protect objects or fields to user roles.
+
+Use it like this to allow Editors to update a product but restrict the removal to 
+Admins:
+```graphql schema
+type Mutation {
+    updateProduct(): Product @auth(required: "Neos.Neos:Editor")
+    removeProduct(): Boolean @auth(required: "Neos.Neos:Administrator")
+}
+
+```
+
+#### CachedDirective
+Caching is always a thing. Somer queries might be expensive to resolve and it's worthy to cache the result.
+Therefore you should use the CachedDirective:
+
+```graphql schema
+type Query {
+    getProduct(id: ID!): Product @cached(maxAge: 100, tags: ["some-tag", "another-tag"])
+}
+```
+
+The CachedDirective will use a flow cache `t3n_GraphQL_Resolve` as a backend. The directive accepts a maxAge 
+argument as well as tags. Check the flow documentation about caching to learn about them!
+The cache entry identifier will respect all arguments (id in this example) as well as the query path.
+
+#### CostDirective
+With the cost directive you can limit how deep users can use query into your objects. For a public api 
+you will propably restrict it to just 2 or three nesting level or the amount of data a user can fetch with
+a single query.
+
+### validation rules
 - useage example
