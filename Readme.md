@@ -375,6 +375,10 @@ t3n:
         schemas:
           root: # use any key you like here
             typeDefs: 'resource://t3n.GraphlQL/Private/GraphQL/schema.root.graphql'
+        schemaDirectives:
+          auth: 't3n\GraphQL\Directive\AuthDirective'
+          cached: 't3n\GraphQL\Directive\CachedDirective'
+          cost: 't3n\GraphQL\Directive\CostDirective'
 ```
 
 #### AuthDirective
@@ -406,9 +410,42 @@ argument as well as tags. Check the flow documentation about caching to learn ab
 The cache entry identifier will respect all arguments (id in this example) as well as the query path.
 
 #### CostDirective
-With the cost directive you can limit how deep users can use query into your objects. For a public api 
-you will propably restrict it to just 2 or three nesting level or the amount of data a user can fetch with
-a single query.
+The CostDirective will add a complexity function to your fields and objects wich is used by some validation rules.
+Eacht type and children has a default complexity of 1.
+It allows you to annotate cost values and multiplierers just like this:
 
-### validation rules
-- useage example
+````graphql schema
+type Product @cost(complexity: 5) {
+    name: String! @cost(complexity: 3)
+    price: Float!
+}
+
+type Query {
+    products(limit: Int!): [Product!]! @cost(multipliers: ["limit"])
+}
+````
+If you query `produts(limit: 3) { name, price }` the query would have a cost of:
+
+9 per product (5 for the product itself and 3 for fetching the name and 1 for the price (default complexity)) multiplied with 3
+cause we defined the limit value as an multiplier. So the query would have a total complexity of 27.
+
+### Validation rules
+There are several Validation rules you can enable per endpoint. The most common are the QueryDepth as well as the QueryComplexity
+rule. Configure your endpoint to enable those rules:
+
+````graphql schema
+t3n:
+  GraphQL:
+    endpoints:
+      'some-endpoint':
+        validationRules:
+          depth:
+            className: 'GraphQL\Validator\Rules\QueryDepth'
+            arguments:
+              maxDepth: 11
+          complexity:
+            className: 'GraphQL\Validator\Rules\QueryComplexity'
+            arguments:
+              maxQueryComplexity: 1000
+````
+The `maxQueryComplexitiy` is calculated via the CostDirective.
