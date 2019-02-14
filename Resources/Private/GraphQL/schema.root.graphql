@@ -1,0 +1,26 @@
+directive @cached(
+    maxAge: Int! = 0
+    tags: [String!] = []
+) on FIELD_DEFINITION
+
+directive @auth(
+    required: String
+) on OBJECT | FIELD_DEFINITION
+
+directive @cost(
+    complexity: Int
+    multipliers: [String!] = []
+) on OBJECT | FIELD_DEFINITION
+
+type Query {
+    ping: String
+}
+
+type Mutation {
+    ping: String
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}
