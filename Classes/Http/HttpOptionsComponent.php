@@ -9,7 +9,6 @@ use Neos\Flow\Http\Component\ComponentChain;
 use Neos\Flow\Http\Component\ComponentContext;
 use Neos\Flow\Http\Component\ComponentInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use function ltrim;
 
 class HttpOptionsComponent implements ComponentInterface
 {

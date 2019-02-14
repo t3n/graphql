@@ -1,11 +1,16 @@
 language: php
 php:
-  - 7.1
   - 7.2
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 install:
-  - composer self-update -q
-  - composer --ignore-platform-reqs install
+  - cp composer.json.ci ../composer.json
+  - cp phpcs.xml.dist ../phpcs.xml.dist
+  - cd .. && composer update
 
 script:
-  - bin/phpcs
+  - FLOW_CONTEXT=Testing bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml graphql/Tests/Functional
+  - bin/phpcs graphql/Classes

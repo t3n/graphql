@@ -1,0 +1,32 @@
+directive @auth(
+    required: String
+) on OBJECT | FIELD_DEFINITION
+
+directive @cached(
+    maxAge: Int! = 0
+    tags: [String!] = []
+) on FIELD_DEFINITION
+
+directive @cost(
+    complexity: Int
+    multipliers: [String!] = []
+) on OBJECT | FIELD_DEFINITION
+
+type CheapType {
+    value1: String
+}
+
+type ExpensiveType @cost(complexity: 5) {
+    value1: String
+    value2: String @cost(complexity: 3)
+    value3: String
+}
+
+type Query {
+    secureValue1: String! @auth(required: "UnknownRole")
+    secureValue2: String! @auth(required: "Neos.Flow:Everybody")
+    cachedValue: String! @cached(maxAge: 100, tags: ["my-test-tag"])
+
+    cheapTypes(limit: Int!): [CheapType!]! @cost(multipliers: ["limit"])
+    expensiveTypes(limit: Int!): [ExpensiveType!]! @cost(multipliers: ["limit"])
+}

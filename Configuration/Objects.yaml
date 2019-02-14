@@ -1,3 +1,10 @@
+t3n\GraphQL\ResolveCacheInterface:
+  factoryObjectName: Neos\Flow\Cache\CacheManager
+  factoryMethodName: getCache
+  arguments:
+    1:
+      value: t3n_GraphQL_Resolve
+
 t3n\GraphQL\Service\SchemaService:
   properties:
     'schemaCache':
