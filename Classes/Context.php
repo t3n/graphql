@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace t3n\GraphQL;
 
-use Neos\Flow\Http\Request;
 use Neos\Flow\Mvc\Controller\ControllerContext;
+use Neos\Flow\Mvc\RequestInterface;
 
 class Context
 {
-    /** @var Request */
+    /** @var RequestInterface */
     protected $request;
 
     public function __construct(ControllerContext $controllerContext)
@@ -17,7 +17,7 @@ class Context
         $this->request = $controllerContext->getRequest()->getMainRequest();
     }
 
-    public function getRequest(): Request
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }
