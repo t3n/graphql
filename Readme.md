@@ -124,10 +124,11 @@ t3n:
   GraphQL:
     endpoints:
       'my-endpoint':
-        mySchema: 
-          resolvers:
-            Query: 'Your\Package\GraphQL\Resolver\QueryResolver'
-            Product: 'Your\Package\GraphQL\Resolver\ProductResolver'
+        schemas:
+          mySchema: 
+            resolvers:
+              Query: 'Your\Package\GraphQL\Resolver\QueryResolver'
+              Product: 'Your\Package\GraphQL\Resolver\ProductResolver'
 ```
 
 Each resolver must implement `t3n\GraphQL\ResolverInterface` !
@@ -138,10 +139,11 @@ t3n:
   GraphQL:
     endpoints:
       'my-endpoint': 
-        mySchema:
-          resolverPathPattern: 'Your\Package\GraphQL\Resolver\Type\{Type}Resolver'
-          resolvers:
-            Query: 'Your\Package\GraphQL\Resolver\QueryResolver'
+        schemas:
+          mySchema:
+            resolverPathPattern: 'Your\Package\GraphQL\Resolver\Type\{Type}Resolver'
+            resolvers:
+              Query: 'Your\Package\GraphQL\Resolver\QueryResolver'
 ```
 With this configuration the class `Your\Package\GraphQL\Resolver\Type\ProductResolver` would be responsible
 for queries on a Product type. The {Type} will evaluate to your type name.
