@@ -22,10 +22,6 @@
       "url": "./graphql"
     }
   },
-  "replace": {
-    "typo3/flow-base-distribution": "self.version"
-  },
-  "minimum-stability": "dev",
   "scripts": {
     "post-update-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
     "post-install-cmd": "Neos\\Flow\\Composer\\InstallerScripts::postUpdateAndInstall",
