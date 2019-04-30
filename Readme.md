@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/t3n/graphql.svg?branch=master)](https://travis-ci.com/t3n/graphql) [![Latest Stable Version](https://poser.pugx.org/t3n/graphql/v/stable)](https://packagist.org/packages/t3n/graphql) [![Total Downloads](https://poser.pugx.org/t3n/graphql/downloads)](https://packagist.org/packages/t3n/graphql)
+[![CircleCI](https://circleci.com/gh/t3n/graphql.svg?style=svg)](https://circleci.com/gh/t3n/graphql) [![Latest Stable Version](https://poser.pugx.org/t3n/graphql/v/stable)](https://packagist.org/packages/t3n/graphql) [![Total Downloads](https://poser.pugx.org/t3n/graphql/downloads)](https://packagist.org/packages/t3n/graphql)
 
 # t3n.GraphQL
 
