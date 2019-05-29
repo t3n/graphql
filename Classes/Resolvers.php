@@ -16,6 +16,14 @@ use ReflectionMethod;
 class Resolvers implements ArrayAccess, IteratorAggregate
 {
     /**
+     * @var string[]
+     */
+    protected static $internalGraphQLMethods = [
+        '__schema',
+        '__resolveType'
+    ];
+
+    /**
      * @Flow\Inject
      *
      * @var ObjectManagerInterface
@@ -58,7 +66,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
                     $classReflection->getMethods(ReflectionMethod::IS_PUBLIC)
                 ),
                 static function (string $methodName): bool {
-                    return $methodName === '__schema' || substr($methodName, 0, 2) !== '__';
+                    return in_array($methodName, self::$internalGraphQLMethods) || substr($methodName, 0, 2) !== '__';
                 }
             );
 
