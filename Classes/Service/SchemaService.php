@@ -74,6 +74,14 @@ class SchemaService
         return $schema;
     }
 
+    /**
+     * @return mixed[]
+     */
+    public function getEndpointConfiguration(string $endpoint): ?array
+    {
+        return $this->endpoints[$endpoint] ?? null;
+    }
+
     protected function getSchemaFromEnvelope(string $envelopeClassName): Schema
     {
         $envelope = $this->objectManager->get($envelopeClassName);
