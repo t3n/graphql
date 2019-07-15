@@ -9,6 +9,7 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ActionController;
 use t3n\GraphQL\Context;
 use t3n\GraphQL\Exception\InvalidContextException;
+use t3n\GraphQL\Log\RequestLoggerInterface;
 use t3n\GraphQL\Service\DefaultFieldResolver;
 use t3n\GraphQL\Service\SchemaService;
 use t3n\GraphQL\Service\ValidationRuleService;
@@ -44,6 +45,13 @@ class GraphQLController extends ActionController
     protected $endpointConfigurations;
 
     /**
+     * @Flow\Inject
+     *
+     * @var RequestLoggerInterface
+     */
+    protected $requestLogger;
+
+    /**
      * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
      *
      * @Flow\SkipCsrfProtection
@@ -62,8 +70,10 @@ class GraphQLController extends ActionController
         $schema = $this->schemaService->getSchemaForEndpoint($endpoint);
         $validationRules = $this->validationRuleService->getValidationRulesForEndpoint($endpoint);
 
-        if (isset($this->endpointConfigurations[$endpoint]['context'])) {
-            $contextClassname = $this->endpointConfigurations[$endpoint]['context'];
+        $endpointConfiguration = $this->endpointConfigurations[$endpoint] ?? [];
+
+        if (isset($endpointConfiguration['context'])) {
+            $contextClassname = $endpointConfiguration['context'];
         } else {
             $contextClassname = $this->contextClassName;
         }
@@ -71,6 +81,10 @@ class GraphQLController extends ActionController
         $context = new $contextClassname($this->controllerContext);
         if (! $context instanceof Context) {
             throw new InvalidContextException('The configured Context must extend \t3n\GraphQL\Context', 1545945332);
+        }
+
+        if (isset($endpointConfiguration['logRequests']) && $endpointConfiguration['logRequests'] === true) {
+            $this->requestLogger->info('Incoming graphql request', ['endpoint' => $endpoint, 'query' => json_encode($query), 'variables' => empty($variables) ? 'none' : $variables]);
         }
 
         GraphQL::setDefaultFieldResolver([DefaultFieldResolver::class, 'resolve']);
