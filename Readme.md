@@ -362,6 +362,21 @@ class MutationResolver implements ResolverInterface
 }
 ```
 
+### Log incoming requests
+
+You can enable logging of incoming requests per endpoint:
+
+```yaml
+t3n:
+  GraphQL:
+    endpoints:
+      'your-endpoint':
+        logRequests: true
+```
+
+Once activated all incoming requests will be logged to `Data/Logs/GraphQLRequests.log`. Each log entry
+will contain the endpoint, query and variables.
+
 ### Secure your endpoint
 
 To secure your api endpoints you have several options. The easiest way is to just configure

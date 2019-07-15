@@ -7,6 +7,17 @@ Neos:
             'graphQLOptions':
               position: 'before routing'
               component: 't3n\GraphQL\Http\HttpOptionsComponent'
+    log:
+      graphQLRequestLogger:
+        logger: Neos\Flow\Log\Logger
+        backend: Neos\Flow\Log\Backend\FileBackend
+        backendOptions:
+          logFileURL: '%FLOW_PATH_DATA%Logs/GraphQLRequests.log'
+          createParentDirectories: true
+          severityThreshold: '%LOG_INFO%'
+          maximumLogFileSize: 10485760
+          logFilesToKeep: 1
+          logMessageOrigin: false
 
 t3n:
   GraphQL:
@@ -14,5 +25,6 @@ t3n:
     includeExceptionMessageInOutput: true
     endpoints: []
 #      'some-endpoint':
+#        'logRequests': true  # if enabled all requests are logged
 #        'context:' 'Foo\Vendor\GraphQL\Context  # optional context that overrides the global context
 #        'schemaEnvelope': 'Some\Fully\Qualified\Namespace'
