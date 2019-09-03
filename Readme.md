@@ -408,6 +408,7 @@ By default this package provides three directives:
 - AuthDirective
 - CachedDirective
 - CostDirective
+- RateLimitDirective
 
 To enable those Directives add this configuration to your endpoint:
 
@@ -423,6 +424,7 @@ t3n:
           auth: 't3n\GraphQL\Directive\AuthDirective'
           cached: 't3n\GraphQL\Directive\CachedDirective'
           cost: 't3n\GraphQL\Directive\CostDirective'
+          rateLimit: 't3n\GraphQL\Directive\RateLimitDirective'
 ```
 
 #### AuthDirective

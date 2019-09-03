@@ -12,6 +12,11 @@ directive @cost(
     multipliers: [String!] = []
 ) on OBJECT | FIELD_DEFINITION
 
+directive @rateLimit(
+    max: Int
+    seconds: Int
+) on OBJECT | FIELD_DEFINITION
+
 type Query {
     ping: String
 }
