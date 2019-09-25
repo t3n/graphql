@@ -8,6 +8,7 @@ use GraphQL\Error\Error;
 use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQLTools\SchemaDirectiveVisitor;
+use Neos\Flow\Annotations as Flow;
 use t3n\GraphQL\ResolveCacheInterface;
 use t3n\GraphQL\Service\DefaultFieldResolver;
 
