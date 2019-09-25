@@ -27,7 +27,6 @@ class RateLimitDirective extends SchemaDirectiveVisitor
     {
         $resolve = $field->resolveFn ?? [DefaultFieldResolver::class, 'resolve'];
         $field->resolveFn = function ($root, $variables, $context, ResolveInfo $resolveInfo) use ($resolve) {
-
             $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
 
             if (strlen($ipAddress) !== 0) {
