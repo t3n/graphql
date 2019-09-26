@@ -13,9 +13,9 @@ directive @cost(
 ) on OBJECT | FIELD_DEFINITION
 
 directive @rateLimit(
-    max: Int
-    seconds: Int
-) on OBJECT | FIELD_DEFINITION
+    max: Int! = 3
+    seconds: Int! = 10
+) on FIELD_DEFINITION
 
 type Query {
     ping: String

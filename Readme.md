@@ -478,6 +478,18 @@ If you query `produts(limit: 3) { name, price }` the query would have a cost of:
 9 per product (5 for the product itself and 3 for fetching the name and 1 for the price (default complexity)) multiplied with 3
 cause we defined the limit value as an multiplier. So the query would have a total complexity of 27.
 
+#### RateLimitDirective
+
+The RateLimitDirective will add a function to limit access to your field by a rate. By default access will be blocked if more
+than three accesses are triggerd in 10 seconds.
+
+```graphql schema
+directive @rateLimit(
+    max: Int! = 3
+    seconds: Int! = 10
+) on FIELD_DEFINITION
+```
+
 ### Validation rules
 
 There are several Validation rules you can enable per endpoint. The most common are the QueryDepth as well as the QueryComplexity
