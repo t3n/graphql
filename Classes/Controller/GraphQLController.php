@@ -100,7 +100,7 @@ class GraphQLController extends ActionController
             $validationRules
         );
 
-        $this->response->setHeader('Content-Type', 'application/json');
+        $this->response->setContentType('application/json');
         return json_encode($result->toArray());
     }
 }
