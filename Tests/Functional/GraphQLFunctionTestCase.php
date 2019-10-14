@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace t3n\GraphQL\Tests\Functional;
 
-use Neos\Flow\Http\Uri;
+use GuzzleHttp\Psr7\Uri;
 use Neos\Flow\Tests\FunctionalTestCase;
 use Neos\Utility\Files;
 use t3n\GraphQL\Service\SchemaService;
