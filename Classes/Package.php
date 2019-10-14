@@ -11,7 +11,7 @@ use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Monitor\FileMonitor;
 use Neos\Flow\Package\Package as BasePackage;
-use Neos\Flow\Package\PackageManagerInterface;
+use Neos\Flow\Package\PackageManager;
 use Neos\Utility\Files;
 use Neos\Utility\Unicode\Functions;
 
@@ -22,7 +22,7 @@ class Package extends BasePackage
     /**
      * @param mixed[] $configuration
      */
-    protected function monitorTypeDefResources(array $configuration, PackageManagerInterface $packageManager, FileMonitor $fileMonitor): void
+    protected function monitorTypeDefResources(array $configuration, PackageManager $packageManager, FileMonitor $fileMonitor): void
     {
         $schemas = $configuration['schemas'] ?? null;
         if (is_array($schemas)) {
@@ -44,7 +44,7 @@ class Package extends BasePackage
 
         $uriParts = Functions::parse_url($typeDefs);
         /** @var BasePackage $package */
-        $package      = $packageManager->getPackage($uriParts['host']);
+        $package = $packageManager->getPackage($uriParts['host']);
         $absolutePath = Files::concatenatePaths([$package->getResourcesPath(), $uriParts['path']]);
         $fileMonitor->monitorFile($absolutePath);
     }
@@ -61,9 +61,9 @@ class Package extends BasePackage
                 return;
             }
 
-            $graphQLFileMonitor     = FileMonitor::createFileMonitorAtBoot(static::FILE_MONITOR_IDENTIFIER, $bootstrap);
-            $configurationManager   = $bootstrap->getEarlyInstance(ConfigurationManager::class);
-            $packageManager         = $bootstrap->getEarlyInstance(PackageManagerInterface::class);
+            $graphQLFileMonitor = FileMonitor::createFileMonitorAtBoot(static::FILE_MONITOR_IDENTIFIER, $bootstrap);
+            $configurationManager = $bootstrap->getEarlyInstance(ConfigurationManager::class);
+            $packageManager = $bootstrap->getEarlyInstance(PackageManager::class);
             $endpointsConfiguration = $configurationManager->getConfiguration(
                 ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
                 't3n.GraphQL.endpoints'

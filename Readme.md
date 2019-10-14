@@ -11,6 +11,8 @@ Simply install the package via composer:
 composer require "t3n/graphql"
 ```
 
+Version 2.x supports neos/flow >= 6.0.0
+
 ## Configuration
 
 In order to use your GraphQL API endpoint some configuration is necessary.
