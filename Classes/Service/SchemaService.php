@@ -111,6 +111,13 @@ class SchemaService
         }
 
         $resolvers = Resolvers::create();
+
+        if (isset($configuration['resolverGenerator'])) {
+            if ($this->objectManager->isRegistered($configuration['resolverGenerator'])) {
+                $resolvers->withGenerator($configuration['resolverGenerator']);
+            }
+        }
+
         if (isset($configuration['resolverPathPattern'])) {
             $resolvers->withPathPattern($configuration['resolverPathPattern']);
         }
