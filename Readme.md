@@ -249,11 +249,11 @@ type Query {
 }
 
 type Mutation {
-  addItem(item: BasketItem): Basket
+  addItem(item: BasketItemInput): Basket
 }
 
 type Basket {
-  items: [BasketItems]
+  items: [BasketItem]
   amount: Float!
 }
 
