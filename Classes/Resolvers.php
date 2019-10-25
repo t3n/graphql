@@ -12,6 +12,7 @@ use Neos\Flow\ObjectManagement\ObjectManagerInterface;
 use Neos\Flow\Reflection\ReflectionService;
 use ReflectionClass;
 use ReflectionMethod;
+use t3n\GraphQL\Exception\InvalidResolverException;
 
 class Resolvers implements ArrayAccess, IteratorAggregate
 {
@@ -33,6 +34,9 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     /** @var string */
     protected $pathPattern;
 
+    /** @var string */
+    protected $generator;
+
     /** @var mixed[] */
     protected $types = [];
 
@@ -52,7 +56,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
     public static function aggregateTypes(ObjectManagerInterface $objectManager): array
     {
         $reflectionService = $objectManager->get(ReflectionService::class);
-        $classNames        = $reflectionService->getAllImplementationClassNamesForInterface(ResolverInterface::class);
+        $classNames = $reflectionService->getAllImplementationClassNamesForInterface(ResolverInterface::class);
 
         $types = [];
         foreach ($classNames as $className) {
@@ -89,8 +93,17 @@ class Resolvers implements ArrayAccess, IteratorAggregate
             return;
         }
 
-        $typeMap         = static::aggregateTypes($this->objectManager);
+        $typeMap = static::aggregateTypes($this->objectManager);
         $resolverClasses = [];
+
+        if ($this->generator) {
+            $generator = $this->objectManager->get($this->generator);
+
+            if (! $generator instanceof ResolverGeneratorInterface) {
+                throw new InvalidResolverException(sprintf('The configured resolver %s generator must implement ResolverGeneratorInterface', $this->generator));
+            }
+            $resolverClasses = $generator->generate();
+        }
 
         if ($this->pathPattern) {
             foreach ($typeMap as $className => $info) {
@@ -113,7 +126,7 @@ class Resolvers implements ArrayAccess, IteratorAggregate
         }
 
         foreach ($resolverClasses as $typeName => $className) {
-            $fields                     = $typeMap[$className]['fields'];
+            $fields = $typeMap[$className]['fields'];
             $this->resolvers[$typeName] = [];
             foreach ($fields as $fieldName) {
                 $this->resolvers[$typeName][$fieldName] = function (...$args) use ($className, $fieldName) {
@@ -121,6 +134,12 @@ class Resolvers implements ArrayAccess, IteratorAggregate
                 };
             }
         }
+    }
+
+    public function withGenerator(string $generatorClassname): self
+    {
+        $this->generator = $generatorClassname;
+        return $this;
     }
 
     public function withPathPattern(string $pathPattern): self

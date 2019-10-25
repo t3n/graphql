@@ -159,6 +159,26 @@ t3n:
 With this configuration the class `Your\Package\GraphQL\Resolver\Type\ProductResolver` would be responsible
 for queries on a Product type. The {Type} will evaluate to your type name.
 
+As a third option you can create resolvers programmatically. Therefore you can register a class that implements
+the `t3n\GraphQL\ResolverGeneratorInterface`. This might be useful to auto generate a resolver mapping:
+
+```yaml
+t3n:
+  GraphQL:
+    endpoints:
+      'my-endpoint':
+        schemas:
+          mySchema:
+            resolverGenerator: 'Your\Package\GraphQL\Resolver\ResolverGenerator'
+```
+
+The Generator must return an array with this structure: ['typeName' => \Resolver\Class\Name]
+
+☝️ Note: Your Resolver can override each other. All resolver configurations are applied in this order:
+- ResolverGenerator
+- dynamic "{Type}Resolver"
+- specific Resolver
+
 #### Resolver Implementation
 
 A implementation for our example could look like this (pseudocode):
