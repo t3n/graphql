@@ -8,7 +8,8 @@
     "require": {
         "neos/flow": "~6.0",
         "t3n/graphql-tools": "~1.0.2",
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "ext-json": "*"
     },
     "require-dev": {
         "t3n/coding-standard": "~1.0.0"
