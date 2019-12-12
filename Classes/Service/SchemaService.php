@@ -160,7 +160,12 @@ class SchemaService
 
         $executableSchemas = [];
 
-        $transforms = [new FlowErrorTransform()];
+        // Determine default error transformer
+        if (array_key_exists('errorTransform', $configuration) && ! empty($configuration['errorTransform']) && class_exists($configuration['errorTransform'])) {
+            $transforms = [new $configuration['errorTransform']()];
+        } else {
+            $transforms = [new FlowErrorTransform()];
+        }
 
         $options = [
             'typeDefs' => [],
