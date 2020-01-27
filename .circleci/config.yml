@@ -1,7 +1,7 @@
 version: 2.1
 
 aliases:
-  - &ci-build-image quay.io/yeebase/ci-build:7.2
+  - &ci-build-image quay.io/yeebase/ci-build:7.3
   - &workspace_root ~/workspace
 
   - &save_composer_cache
@@ -16,11 +16,11 @@ aliases:
       - composer-cache-v1-
 
   - &attach_workspace
-     at: *workspace_root
+    at: *workspace_root
 
   - &persist_to_workspace
     root: .
-    paths: 
+    paths:
       - .
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - restore_cache: *restore_composer_cache
-      
+
       - run: |
           mkdir graphql
           shopt -s extglob dotglob
@@ -61,14 +61,33 @@ jobs:
       FLOW_CONTEXT: Testing
     steps:
       - attach_workspace: *attach_workspace
-      - run:
-          bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml graphql/Tests/Functional
+      - run: bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml graphql/Tests/Functional
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - checkout
+      - checkout:
+          filters:
+            branches:
+              ignore: /dependabot.*/
+      - lint:
+          requires:
+            - checkout
+      - tests:
+          requires:
+            - checkout
+
+  build_and_test_dependabot:
+    jobs:
+      - hold:
+          type: approval
+          filters:
+            branches:
+              only: /dependabot.*/
+      - checkout:
+          requires:
+            - hold
       - lint:
           requires:
             - checkout
