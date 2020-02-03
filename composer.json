@@ -12,7 +12,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "t3n/coding-standard": "~1.0.0"
+        "t3n/coding-standard": "~1.1.0"
     },
     "autoload": {
         "psr-4": {
