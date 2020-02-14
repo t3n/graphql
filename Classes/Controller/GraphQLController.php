@@ -52,14 +52,14 @@ class GraphQLController extends ActionController
     protected $requestLogger;
 
     /**
-     * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
-     *
      * @Flow\SkipCsrfProtection
      *
-     * @param string $endpoint
-     * @param string $query
-     * @param array|null $variables
-     * @param string|null $operationName
+     * @param mixed[]|null $variables
+     *
+     * @throws \Neos\Flow\Mvc\Exception\NoSuchArgumentException
+     * @throws InvalidContextException
+     *
+     * @phpcsSuppress PEAR.Commenting.FunctionComment.MissingParamTag
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null): string
     {
