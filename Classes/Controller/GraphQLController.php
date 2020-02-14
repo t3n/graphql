@@ -52,7 +52,7 @@ class GraphQLController extends ActionController
     protected $requestLogger;
 
     /**
-     * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
      *
      * @Flow\SkipCsrfProtection
      *
