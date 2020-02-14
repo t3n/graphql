@@ -28,9 +28,12 @@ class HttpOptionsComponent implements ComponentInterface
             return;
         }
 
-        $endpoint = ltrim($httpRequest->getRequestTarget(), '/');
+        // We explode the request target because custom routes like /some/custom/route/<endpoint> are
+        // are common. So we double check here if the last part in the route matches a configured
+        // endpoint
+        $endpoint = explode('/', ltrim($httpRequest->getRequestTarget(), '\/'));
 
-        if (! isset($this->endpoints[$endpoint])) {
+        if (! isset($this->endpoints[end($endpoint)])) {
             return;
         }
 
