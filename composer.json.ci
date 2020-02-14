@@ -9,7 +9,7 @@
     "neos/flow": "~6.0",
     "neos/buildessentials": "~6.0",
     "t3n/graphql": "@dev",
-    "t3n/coding-standard": "~1.0.0"
+    "t3n/coding-standard": "~1.1.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "~3.5",
