@@ -54,9 +54,9 @@ class GraphQLController extends ActionController
     /**
      * A list of IANA media types which are supported by this controller
      *
-     * @var string[]
-     *
      * @see http://www.iana.org/assignments/media-types/index.html
+     *
+     * @var string[]
      */
     protected $supportedMediaTypes = ['application/json'];
 
