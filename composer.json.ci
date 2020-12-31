@@ -14,7 +14,7 @@
   "require-dev": {
     "squizlabs/php_codesniffer": "~3.5",
     "phpunit/phpunit": "~9.3",
-    "mikey179/vfsstream": "~1.7"
+    "mikey179/vfsstream": "~1.6"
   },
   "repositories": {
     "srcPackage": {
