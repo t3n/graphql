@@ -171,7 +171,10 @@ class SchemaService
             'typeDefs' => [],
             'resolvers' => [],
             'schemaDirectives' => [],
-            'resolverValidationOptions' => ['allowResolversNotInSchema' => true],
+            'resolverValidationOptions' => [
+                'allowResolversNotInSchema' => $configuration['resolverValidationOptions']['allowResolversNotInSchema'] ?? true,
+                'requireResolversForResolveType' => $configuration['resolverValidationOptions']['requireResolversForResolveType'] ?? null,
+            ],
         ];
 
         foreach ($schemaConfigurations as $schemaConfiguration) {
