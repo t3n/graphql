@@ -34,7 +34,7 @@ class FlowErrorTransform implements Transform
                 $message = $this->throwableStorage->logThrowable($previousError);
 
                 if (! $this->includeExceptionMessageInOutput) {
-                    $message = preg_replace('/.* - See also: (.+)\.txt$/', 'Internal error ($1)', $message);
+                    $message = preg_replace('/.* - See also: (.+)\.txt$/s', 'Internal error ($1)', $message);
                 }
 
                 return new Error(
