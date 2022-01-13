@@ -111,6 +111,13 @@ class SchemaService
         }
 
         $resolvers = Resolvers::create();
+
+        if (isset($configuration['resolverGenerator'])) {
+            if ($this->objectManager->isRegistered($configuration['resolverGenerator'])) {
+                $resolvers->withGenerator($configuration['resolverGenerator']);
+            }
+        }
+
         if (isset($configuration['resolverPathPattern'])) {
             $resolvers->withPathPattern($configuration['resolverPathPattern']);
         }
@@ -153,13 +160,21 @@ class SchemaService
 
         $executableSchemas = [];
 
-        $transforms = [new FlowErrorTransform()];
+        // Determine default error transformer
+        if (array_key_exists('errorTransform', $configuration) && ! empty($configuration['errorTransform']) && class_exists($configuration['errorTransform'])) {
+            $transforms = [new $configuration['errorTransform']()];
+        } else {
+            $transforms = [new FlowErrorTransform()];
+        }
 
         $options = [
             'typeDefs' => [],
             'resolvers' => [],
             'schemaDirectives' => [],
-            'resolverValidationOptions' => ['allowResolversNotInSchema' => true],
+            'resolverValidationOptions' => [
+                'allowResolversNotInSchema' => $configuration['resolverValidationOptions']['allowResolversNotInSchema'] ?? true,
+                'requireResolversForResolveType' => $configuration['resolverValidationOptions']['requireResolversForResolveType'] ?? null,
+            ],
         ];
 
         foreach ($schemaConfigurations as $schemaConfiguration) {

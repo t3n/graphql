@@ -52,14 +52,23 @@ class GraphQLController extends ActionController
     protected $requestLogger;
 
     /**
-     * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
+     * A list of IANA media types which are supported by this controller
      *
+     * @see http://www.iana.org/assignments/media-types/index.html
+     *
+     * @var string[]
+     */
+    protected $supportedMediaTypes = ['application/json'];
+
+    /**
      * @Flow\SkipCsrfProtection
      *
-     * @param string $endpoint
-     * @param string $query
-     * @param array|null $variables
-     * @param string|null $operationName
+     * @param mixed[]|null $variables
+     *
+     * @throws \Neos\Flow\Mvc\Exception\NoSuchArgumentException
+     * @throws InvalidContextException
+     *
+     * @phpcsSuppress PEAR.Commenting.FunctionComment.MissingParamTag
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null): string
     {
@@ -100,7 +109,7 @@ class GraphQLController extends ActionController
             $validationRules
         );
 
-        $this->response->setHeader('Content-Type', 'application/json');
+        $this->response->setContentType('application/json');
         return json_encode($result->toArray());
     }
 }

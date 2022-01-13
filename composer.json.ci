@@ -6,14 +6,14 @@
     "bin-dir": "bin"
   },
   "require": {
-    "neos/flow": "~5.2.0",
-    "neos/buildessentials": "~5.2.0",
+    "neos/flow": "~7.0",
+    "neos/buildessentials": "~7.0",
     "t3n/graphql": "@dev",
-    "t3n/coding-standard": "~1.0.0"
+    "t3n/coding-standard": "~1.1.0"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "3.3.2",
-    "phpunit/phpunit": "~7.1",
+    "squizlabs/php_codesniffer": "~3.5",
+    "phpunit/phpunit": "~9.3",
     "mikey179/vfsstream": "~1.6"
   },
   "repositories": {

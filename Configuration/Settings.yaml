@@ -1,12 +1,10 @@
 Neos:
   Flow:
     http:
-      chain:
-        'process':
-          chain:
-            'graphQLOptions':
-              position: 'before routing'
-              component: 't3n\GraphQL\Http\HttpOptionsComponent'
+      middlewares:
+        'graphQLOptions':
+          position: 'before routing'
+          middleware: 't3n\GraphQL\Http\HttpOptionsMiddleware'
     log:
       graphQLRequestLogger:
         logger: Neos\Flow\Log\Logger
@@ -28,3 +26,4 @@ t3n:
 #        'logRequests': true  # if enabled all requests are logged
 #        'context:' 'Foo\Vendor\GraphQL\Context  # optional context that overrides the global context
 #        'schemaEnvelope': 'Some\Fully\Qualified\Namespace'
+#        'errorTransform': t3n\GraphQL\Transform\FlowErrorTransform # optional: override the default error transformer for this schema

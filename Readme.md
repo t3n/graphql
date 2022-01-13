@@ -11,6 +11,8 @@ Simply install the package via composer:
 composer require "t3n/graphql"
 ```
 
+Version 2.x supports neos/flow >= 6.0.0
+
 ## Configuration
 
 In order to use your GraphQL API endpoint some configuration is necessary.
@@ -157,6 +159,26 @@ t3n:
 With this configuration the class `Your\Package\GraphQL\Resolver\Type\ProductResolver` would be responsible
 for queries on a Product type. The {Type} will evaluate to your type name.
 
+As a third option you can create resolvers programmatically. Therefore you can register a class that implements
+the `t3n\GraphQL\ResolverGeneratorInterface`. This might be useful to auto generate a resolver mapping:
+
+```yaml
+t3n:
+  GraphQL:
+    endpoints:
+      'my-endpoint':
+        schemas:
+          mySchema:
+            resolverGenerator: 'Your\Package\GraphQL\Resolver\ResolverGenerator'
+```
+
+The Generator must return an array with this structure: ['typeName' => \Resolver\Class\Name]
+
+☝️ Note: Your Resolver can override each other. All resolver configurations are applied in this order:
+- ResolverGenerator
+- dynamic "{Type}Resolver"
+- specific Resolver
+
 #### Resolver Implementation
 
 A implementation for our example could look like this (pseudocode):
@@ -231,6 +253,138 @@ All resolver methods share the same signature:
 method($source, $args, $context, $info)
 ```
 
+#### Interface Types
+
+When working with interfaces, you need Resolvers for your interfaces as well. Given this schema:
+
+```graphql schema
+interface Person {
+    firstName: String!
+    lastName: String!
+}
+
+type Customer implements Person {
+    firstName: String!
+    lastName: String!
+    email: String!
+}
+
+type Supplier implements Person {
+    firstName: String!
+    lastName: String!
+    phone: String
+}
+```
+
+You need to configure a `Person` Resolver as well as Resolvers for the concrete implementations.
+
+While the concrete Type Resolvers do not need any special attention, the `Person` Resolver implements the 
+`__resolveType` function returning the type names:
+
+```php
+<?php
+
+namespace Your\Package\GraphQL\Resolver\Type;
+
+use t3n\GraphQL\ResolverInterface;
+
+class PersonResolver implements ResolverInterface
+{
+    public function __resolveType($source): ?string
+    {
+        if ($source instanceof Customer) {
+            return 'Customer';
+        } elseif ($source instanceof Supplier) {
+            return 'Supplier';
+        }
+        return null;
+    }
+}
+```
+
+#### Union Types
+
+Unions are resolved the same way as interfaces. For the example above, the corresponding Schema looks like this:
+
+```graphql schema
+union Person = Customer | Supplier
+```
+
+It is resolved again with a `PersonResolver` implementing the `__resolveType` function.
+
+#### Enum Types
+
+Enums are resolved automatically. The Resolver method simply returns a string matching the Enum value. For the Schema:
+```graphql schema
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+type Customer {
+    status: Status!
+}
+```
+
+The `CustomerResolver` method returns the value as string:
+```php
+public function status(Customer $customer): string
+{
+    return $customer->isActive() ? 'ACTIVE' : 'INACTIVE';
+}
+```
+
+#### Scalar Types
+
+Types at the leaves of a Json tree are defined by Scalars. Own Scalars are implemented by a Resolver 
+implementing the functions `serialize()`, `parseLiteral()` and `parseValue()`.
+
+This example shows the implementation of a `DateTime` Scalar Type. For the given Schema definition:
+
+```graphql schema
+scalar DateTime
+```
+
+The `DateTimeResolver` looks the following when working with Unix timestamps:
+
+```php
+<?php
+
+namespace Your\Package\GraphQL\Resolver\Type;
+
+use DateTime;
+use GraphQL\Language\AST\IntValueNode;
+use GraphQL\Language\AST\Node;
+use t3n\GraphQL\ResolverInterface;
+
+class DateTimeResolver implements ResolverInterface
+{
+    public function serialize(DateTime $value): ?int
+    {
+        return $value->getTimestamp();
+    }
+
+    public function parseLiteral(Node $ast): ?DateTime
+    {
+        if ($ast instanceof IntValueNode) {
+            $dateTime = new DateTime();
+            $dateTime->setTimestamp((int)$ast->value);
+            return $dateTime;
+        }
+        return null;
+    }
+
+    public function parseValue(int $value): DateTime
+    {
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp($value);
+        return $dateTime;
+    }
+}
+```
+
+You have to make the `DateTimeResolver` available again through one of the configuration options in the Settings.yaml.
+
 ### Context
 
 The third argument in your Resolver method signature is the Context.
@@ -247,11 +401,11 @@ type Query {
 }
 
 type Mutation {
-  addItem(item: BasketItem): Basket
+  addItem(item: BasketItemInput): Basket
 }
 
 type Basket {
-  items: [BasketItems]
+  items: [BasketItem]
   amount: Float!
 }
 
