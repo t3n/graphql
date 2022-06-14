@@ -1,0 +1,25 @@
+version: 2
+registries:
+  git-gitlab-yeebase-com:
+    type: git
+    url: https://gitlab.yeebase.com
+    username: jsu
+    password: "${{secrets.GIT_GITLAB_YEEBASE_COM_PASSWORD}}"
+  git-github-com:
+    type: git
+    url: https://github.com
+    username: x-access-token
+    password: "${{secrets.GIT_GITHUB_COM_PASSWORD}}"
+
+updates:
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "06:00"
+    timezone: Europe/Berlin
+  open-pull-requests-limit: 10
+  target-branch: master
+  registries:
+  - git-gitlab-yeebase-com
+  - git-github-com
