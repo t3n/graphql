@@ -43,7 +43,7 @@ class FlowErrorTransform implements Transform
                 $this->logger->error('GraphQL response with error. The error has bubbled up to the next nullable field: ' . $message);
 
                 if (! $this->includeExceptionMessageInOutput) {
-                    $message = preg_replace('/.* - See also: (.+)\.txt$/', 'Internal error ($1)', $message);
+                    $message = preg_replace('/.* - See also: (.+)\.txt$/s', 'Internal error ($1)', $message);
                 }
 
                 return new Error(

@@ -29,7 +29,7 @@ class DefaultFieldResolver
             $resolvedProperty = ObjectAccess::getProperty($source, $fieldName);
         }
 
-        if (is_callable($resolvedProperty)) {
+        if ($resolvedProperty instanceof \Closure) {
             return $resolvedProperty($source, $args, $context, $info);
         }
 
