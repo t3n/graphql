@@ -9,6 +9,7 @@ use GraphQL\Executor\ExecutionResult;
 use GraphQLTools\Transforms\Transform;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Log\ThrowableStorageInterface;
+use Psr\Log\LoggerInterface;
 
 class FlowErrorTransform implements Transform
 {
@@ -18,6 +19,13 @@ class FlowErrorTransform implements Transform
      * @var ThrowableStorageInterface
      */
     protected $throwableStorage;
+
+    /**
+     * @Flow\Inject
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @Flow\InjectConfiguration("includeExceptionMessageInOutput")
@@ -32,6 +40,7 @@ class FlowErrorTransform implements Transform
             $previousError = $error->getPrevious();
             if (! $previousError instanceof Error) {
                 $message = $this->throwableStorage->logThrowable($previousError);
+                $this->logger->error('GraphQL response with error. The error has bubbled up to the next nullable field: ' . $message);
 
                 if (! $this->includeExceptionMessageInOutput) {
                     $message = preg_replace('/.* - See also: (.+)\.txt$/s', 'Internal error ($1)', $message);
