@@ -52,6 +52,15 @@ class GraphQLController extends ActionController
     protected $requestLogger;
 
     /**
+     * A list of IANA media types which are supported by this controller
+     *
+     * @see http://www.iana.org/assignments/media-types/index.html
+     *
+     * @var string[]
+     */
+    protected $supportedMediaTypes = ['application/json'];
+
+    /**
      * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification
      *
      * @Flow\SkipCsrfProtection
