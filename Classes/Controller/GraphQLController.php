@@ -63,7 +63,7 @@ class GraphQLController extends ActionController
     /**
      * @Flow\SkipCsrfProtection
      *
-     * @param mixed[]|null $variables
+     * @param array|null $variables
      *
      * @throws \Neos\Flow\Mvc\Exception\NoSuchArgumentException
      * @throws InvalidContextException
