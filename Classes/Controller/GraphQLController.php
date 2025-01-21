@@ -68,6 +68,7 @@ class GraphQLController extends ActionController
      * @throws \Neos\Flow\Mvc\Exception\NoSuchArgumentException
      * @throws InvalidContextException
      *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification
      * @phpcsSuppress PEAR.Commenting.FunctionComment.MissingParamTag
      */
     public function queryAction(string $endpoint, string $query, ?array $variables = null, ?string $operationName = null): string
