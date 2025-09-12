@@ -1,4 +1,5 @@
 {
+    "abandoned": true,
     "description": "Neos Flow adapter for graphql",
     "type": "neos-package",
     "name": "t3n/graphql",
