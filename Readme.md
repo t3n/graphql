@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/t3n/graphql.svg?style=svg)](https://circleci.com/gh/t3n/graphql) [![Latest Stable Version](https://poser.pugx.org/t3n/graphql/v/stable)](https://packagist.org/packages/t3n/graphql) [![Total Downloads](https://poser.pugx.org/t3n/graphql/downloads)](https://packagist.org/packages/t3n/graphql)
+> [!WARNING]
+> **This plugin is no longer being maintained. As replacement we suggest https://github.com/onivaevents/graphql**
 
 # t3n.GraphQL
 
